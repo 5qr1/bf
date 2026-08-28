@@ -1,0 +1,7 @@
+bf: build files
+===============
+
+bf is an extremely simple & small (~149 cloc) templating engine(?) which allows you to embed shell commands into your txt files. it was originally written to accompany <https://github.com/5qr1/muth|muth>, but it is quite general purpose.
+
+licensed under wtfpl :- )
+-------------------------
