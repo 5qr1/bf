@@ -25,6 +25,9 @@ int
 main(int argc, char **argv) {
 	Argc = argc;
 	Argv = argv;
+	
+	if(argc > 1 && !(strcmp(argv[1], "-v")))
+		eprint(0, "bf v%s\n", VERSION);
 
 	char *buf = lfiletobuf(stdin);
 	process(NULL, buf, &buf[strlen(buf)]);
@@ -156,6 +159,7 @@ script(char **ret, char *st, char *en) {
 	
 	free(buf);
 	free(pbuf);
+	pclose(sh);
 	return (p - st) + 1;
 }
 
@@ -172,19 +176,18 @@ variable(char **ret, char *st, char *en) {
 	buf[p - (st + 1)] = '\0';
 	
 	char *b = buf;
-	for(;b < &buf[strlen(buf)] && !(isdigit(b[0])); b++);
-	if(!(isdigit(b[0])))
-		return p - st;
-	
-	int n = atoi(buf);
-	if(n > Argc - 1)
-		return p - st;
+	for(;b < &buf[strlen(buf)] && isdigit(b[0]); b++);
+	buf[b - buf] = '\0';
 
-	if(ret)
+	int len = strlen(buf), n = atoi(buf);
+	if(n > Argc - 1) {
+		free(buf);
+		return len + 1;
+	} else if(ret)
 		*ret = apsprintf(*ret, "%s", Argv[n]);
 	else
 		printf("%s", Argv[n]);
 
 	free(buf);
-	return p - st;
+	return len + 1;
 }
