@@ -3,6 +3,7 @@
 
 VERSION = 0.1
 
+PREFIX = /usr/local
 CC = cc
 CFLAGS = -DVERSION=\"$(VERSION)\"
 LDLIBS = -lm
