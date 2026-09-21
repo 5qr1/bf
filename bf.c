@@ -6,6 +6,9 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
+#ifdef __OpenBSD__
+#include <unistd.h>
+#endif
 
 /* todo: dont use globals here :- ( */
 static int Argc;
@@ -23,12 +26,17 @@ static int variable(char **ret, char *st, char *en);
 
 int
 main(int argc, char **argv) {
+	#ifdef __OpenBSD__
+	if(pledge("stdio proc exec", NULL) == -1)
+		eprint(1, "pledge failed\n");
+	#endif
+
 	Argc = argc;
 	Argv = argv;
 	
 	if(argc > 1 && !(strcmp(argv[1], "-v")))
 		eprint(0, "bf v%s\n", VERSION);
-
+	
 	char *buf = lfiletobuf(stdin);
 	process(NULL, buf, &buf[strlen(buf)]);
 
